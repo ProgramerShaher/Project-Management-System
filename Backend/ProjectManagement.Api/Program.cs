@@ -1,23 +1,24 @@
+using ProjectManagement.Api.Extensions; 
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// 1. ≈÷«›… «·Œœ„«  «·√”«”Ì…
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+
+// 2. «” Œœ«„ «·‹ Extension «·–Ì √‰‘√‰«Â · ”ÃÌ· Swagger
+builder.Services.AddSwaggerDocumentation();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// 3. ≈⁄œ«œ «·‹ Pipeline (Middlewares)
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+	// «” Œœ«„ «·‹ Extension · ›⁄Ì· Ê«ÃÂ… ”Ê«ÃÌ—
+	app.UseSwaggerDocumentation();
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
