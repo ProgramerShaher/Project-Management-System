@@ -82,29 +82,30 @@ namespace ProjectManagement.Api.Services.Implementations
             return new ApiResponse<ProjectTaskDto>(createdDto, "تم إنشاء المهمة بنجاح.");
         }
 
-        public async Task<ApiResponse<string>> UpdateTaskAsync(Guid id, ProjectTaskUpdateDto updateDto)
+        public async Task<ApiResponse<ProjectTaskDto>> UpdateTaskAsync(Guid id, ProjectTaskUpdateDto updateDto)
         {
             var existingTask = await _taskRepository.GetByIdAsync(id);
             if (existingTask == null)
-                return new ApiResponse<string>("المهمة غير موجودة.");
+                return new ApiResponse<ProjectTaskDto>("المهمة غير موجودة.");
 
             _mapper.Map(updateDto, existingTask);
             await _taskRepository.UpdateAsync(existingTask);
 
+            var updatedDto = _mapper.Map<ProjectTaskDto>(existingTask);
             _logger.LogInformation("تم تحديث المهمة: {Id}", id);
-            return new ApiResponse<string>(null, "تم التعديل وحفظ التغييرات.");
+            return new ApiResponse<ProjectTaskDto>(updatedDto, "تم التعديل وحفظ التغييرات.");
         }
 
-        public async Task<ApiResponse<string>> DeleteTaskAsync(Guid id)
+        public async Task<ApiResponse<bool>> DeleteTaskAsync(Guid id)
         {
             var existingTask = await _taskRepository.GetByIdAsync(id);
             if (existingTask == null)
-                return new ApiResponse<string>("المهمة غير موجودة لتتم إزالتها.");
+                return new ApiResponse<bool>("المهمة غير موجودة لتتم إزالتها.");
 
             await _taskRepository.DeleteAsync(existingTask);
             
             _logger.LogInformation("تم حذف المهمة بنجاح: {Id}", id);
-            return new ApiResponse<string>(null, "تم حذف المهمة.");
+            return new ApiResponse<bool>(true, "تم حذف المهمة.");
         }
         #endregion
     }

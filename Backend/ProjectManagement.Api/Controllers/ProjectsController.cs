@@ -53,9 +53,9 @@ namespace ProjectManagement.Api.Controllers
 
         #region Endpoint - PUT
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult<ApiResponse<string>>> UpdateProject(Guid id, [FromBody] ProjectUpdateDto updateDto)
+        public async Task<ActionResult<ApiResponse<ProjectDto>>> UpdateProject(Guid id, [FromBody] ProjectUpdateDto updateDto)
         {
-            if (!ModelState.IsValid) return BadRequest(new ApiResponse<string>("البيانات المدخلة غير صحيحة."));
+            if (!ModelState.IsValid) return BadRequest(new ApiResponse<ProjectDto>("البيانات المدخلة غير صحيحة."));
             var response = await _projectService.UpdateProjectAsync(id, updateDto);
             if (!response.Success) return NotFound(response);
             return Ok(response);
@@ -64,7 +64,7 @@ namespace ProjectManagement.Api.Controllers
 
         #region Endpoint - DELETE
         [HttpDelete("{id:guid}")]
-        public async Task<ActionResult<ApiResponse<string>>> DeleteProject(Guid id)
+        public async Task<ActionResult<ApiResponse<bool>>> DeleteProject(Guid id)
         {
             var response = await _projectService.DeleteProjectAsync(id);
             if (!response.Success) return NotFound(response);

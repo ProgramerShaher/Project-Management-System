@@ -14,7 +14,7 @@ namespace ProjectManagement.Api.Services.Interfaces
         Task<ApiResponse<IEnumerable<ProjectDto>>> GetAllProjectsAsync();
         Task<ApiResponse<ProjectDto>> GetProjectByIdAsync(Guid id);
         Task<ApiResponse<ProjectDto>> CreateProjectAsync(ProjectCreateDto createDto);
-        Task<ApiResponse<string>> UpdateProjectAsync(Guid id, ProjectUpdateDto updateDto);
-        Task<ApiResponse<string>> DeleteProjectAsync(Guid id);
+        Task<ApiResponse<ProjectDto>> UpdateProjectAsync(Guid id, ProjectUpdateDto updateDto);
+        Task<ApiResponse<bool>> DeleteProjectAsync(Guid id);
     }
 }

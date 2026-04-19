@@ -65,29 +65,30 @@ namespace ProjectManagement.Api.Services.Implementations
             return new ApiResponse<ProjectDto>(createdDto, "تم إنشاء المشروع بنجاح.");
         }
 
-        public async Task<ApiResponse<string>> UpdateProjectAsync(Guid id, ProjectUpdateDto updateDto)
+        public async Task<ApiResponse<ProjectDto>> UpdateProjectAsync(Guid id, ProjectUpdateDto updateDto)
         {
             var existingProject = await _projectRepository.GetByIdAsync(id);
             if (existingProject == null)
-                return new ApiResponse<string>("لا يوجد مشروع بهذا المعرف للتعديل.");
+                return new ApiResponse<ProjectDto>("لا يوجد مشروع بهذا المعرف للتعديل.");
 
             _mapper.Map(updateDto, existingProject);
             await _projectRepository.UpdateAsync(existingProject);
 
+            var updatedDto = _mapper.Map<ProjectDto>(existingProject);
             _logger.LogInformation("تم تعديل المشروع: {Id}", id);
-            return new ApiResponse<string>(null, "تم تعديل المشروع بنجاح.");
+            return new ApiResponse<ProjectDto>(updatedDto, "تم تعديل المشروع بنجاح.");
         }
 
-        public async Task<ApiResponse<string>> DeleteProjectAsync(Guid id)
+        public async Task<ApiResponse<bool>> DeleteProjectAsync(Guid id)
         {
             var existingProject = await _projectRepository.GetByIdAsync(id);
             if (existingProject == null)
-                return new ApiResponse<string>("لا يوجد مشروع بهذا المعرف للحذف.");
+                return new ApiResponse<bool>("لا يوجد مشروع بهذا المعرف للحذف.");
 
             await _projectRepository.DeleteAsync(existingProject);
             
             _logger.LogInformation("تم حذف المشروع: {Id}", id);
-            return new ApiResponse<string>(null, "تم حذف المشروع بنجاح.");
+            return new ApiResponse<bool>(true, "تم حذف المشروع بنجاح.");
         }
         #endregion
     }
