@@ -25,13 +25,13 @@ namespace ProjectManagement.Api.Repositories.Implementations
         #endregion
 
         #region Read Operations
-        public async Task<IEnumerable<Project>> GetAllAsync()
+        public async Task<ProjectManagement.Api.Wrappers.PagedList<Project>> GetAllAsync(int pageNumber, int pageSize)
         {
-            // نستخدم Include لنجلب المهام من أجل حساب عددها في الواجهة
-            return await _context.Projects
-                .Include(p => p.Tasks)
-                .AsNoTracking()
-                .ToListAsync();
+            var query = _context.Projects.Include(p => p.Tasks).AsNoTracking();
+            var count = await query.CountAsync();
+            var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            
+            return new ProjectManagement.Api.Wrappers.PagedList<Project>(items, count, pageNumber, pageSize);
         }
 
         public async Task<Project?> GetByIdAsync(Guid id)

@@ -34,21 +34,14 @@ namespace ProjectManagement.Api.Services.Implementations
         #endregion
 
         #region Methods
-        public async Task<ApiResponse<IEnumerable<ProjectTaskDto>>> GetTasksAsync(Guid? projectId, ProjectTaskStatus? status)
+        public async Task<ApiResponse<ProjectManagement.Api.Wrappers.PagedList<ProjectTaskDto>>> GetTasksAsync(Guid? projectId, ProjectTaskStatus? status, int pageNumber = 1, int pageSize = 10)
         {
-            IEnumerable<Models.Entities.ProjectTask> tasks;
+            var pagedTasks = await _taskRepository.GetTasksAsync(projectId, status, pageNumber, pageSize);
 
-            if (projectId.HasValue && status.HasValue)
-                tasks = await _taskRepository.GetTasksByProjectIdAndStatusAsync(projectId.Value, status.Value);
-            else if (projectId.HasValue)
-                tasks = await _taskRepository.GetTasksByProjectIdAsync(projectId.Value);
-            else if (status.HasValue)
-                tasks = await _taskRepository.GetTasksByStatusAsync(status.Value);
-            else
-                tasks = await _taskRepository.GetAllAsync();
+            var dtos = _mapper.Map<List<ProjectTaskDto>>(pagedTasks.Items);
+            var pagedDtos = new ProjectManagement.Api.Wrappers.PagedList<ProjectTaskDto>(dtos, pagedTasks.TotalCount, pagedTasks.PageNumber, pagedTasks.PageSize);
 
-            var dtos = _mapper.Map<IEnumerable<ProjectTaskDto>>(tasks);
-            return new ApiResponse<IEnumerable<ProjectTaskDto>>(dtos, "تم الجلب بنجاح.");
+            return new ApiResponse<ProjectManagement.Api.Wrappers.PagedList<ProjectTaskDto>>(pagedDtos, "تم الجلب الفلترة بنجاح.");
         }
 
         public async Task<ApiResponse<ProjectTaskDto>> GetTaskByIdAsync(Guid id)

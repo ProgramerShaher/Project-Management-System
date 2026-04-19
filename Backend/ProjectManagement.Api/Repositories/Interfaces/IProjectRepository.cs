@@ -11,7 +11,7 @@ namespace ProjectManagement.Api.Repositories.Interfaces
     public interface IProjectRepository
     {
         #region Read Operations
-        Task<IEnumerable<Project>> GetAllAsync();
+        Task<ProjectManagement.Api.Wrappers.PagedList<Project>> GetAllAsync(int pageNumber, int pageSize);
         Task<Project?> GetByIdAsync(Guid id);
         #endregion
 

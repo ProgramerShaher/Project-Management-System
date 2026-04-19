@@ -27,38 +27,25 @@ namespace ProjectManagement.Api.Repositories.Implementations
         #endregion
 
         #region Read Operations
-        public async Task<IEnumerable<Models.Entities.ProjectTask>> GetAllAsync()
+        public async Task<ProjectManagement.Api.Wrappers.PagedList<Models.Entities.ProjectTask>> GetTasksAsync(Guid? projectId, ProjectTaskStatus? status, int pageNumber, int pageSize)
         {
-            return await _context.Tasks.AsNoTracking().ToListAsync();
+            var query = _context.Tasks.AsNoTracking().AsQueryable();
+
+            if (projectId.HasValue)
+                query = query.Where(t => t.ProjectId == projectId.Value);
+
+            if (status.HasValue)
+                query = query.Where(t => t.Status == status.Value);
+
+            var count = await query.CountAsync();
+            var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return new ProjectManagement.Api.Wrappers.PagedList<Models.Entities.ProjectTask>(items, count, pageNumber, pageSize);
         }
 
         public async Task<Models.Entities.ProjectTask?> GetByIdAsync(Guid id)
         {
             return await _context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
-        }
-
-        public async Task<IEnumerable<Models.Entities.ProjectTask>> GetTasksByProjectIdAsync(Guid projectId)
-        {
-            return await _context.Tasks
-                .Where(t => t.ProjectId == projectId)
-                .AsNoTracking()
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Models.Entities.ProjectTask>> GetTasksByStatusAsync(ProjectTaskStatus status)
-        {
-            return await _context.Tasks
-                .Where(t => t.Status == status)
-                .AsNoTracking()
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Models.Entities.ProjectTask>> GetTasksByProjectIdAndStatusAsync(Guid projectId, ProjectTaskStatus status)
-        {
-            return await _context.Tasks
-                .Where(t => t.ProjectId == projectId && t.Status == status)
-                .AsNoTracking()
-                .ToListAsync();
         }
         #endregion
 

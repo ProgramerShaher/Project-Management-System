@@ -24,9 +24,9 @@ namespace ProjectManagement.Api.Controllers
 
         #region Endpoint - GET ALL
         [HttpGet]
-        public async Task<ActionResult<ApiResponse<IEnumerable<ProjectDto>>>> GetAllProjects()
+        public async Task<ActionResult<ApiResponse<ProjectManagement.Api.Wrappers.PagedList<ProjectDto>>>> GetAllProjects([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            var response = await _projectService.GetAllProjectsAsync();
+            var response = await _projectService.GetAllProjectsAsync(pageNumber, pageSize);
             return Ok(response);
         }
         #endregion

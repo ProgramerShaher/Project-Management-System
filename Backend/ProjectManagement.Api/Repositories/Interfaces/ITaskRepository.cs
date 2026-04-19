@@ -12,11 +12,8 @@ namespace ProjectManagement.Api.Repositories.Interfaces
     public interface ITaskRepository
     {
         #region Read Operations
-        Task<IEnumerable<Models.Entities.ProjectTask>> GetAllAsync();
+        Task<ProjectManagement.Api.Wrappers.PagedList<Models.Entities.ProjectTask>> GetTasksAsync(Guid? projectId, ProjectTaskStatus? status, int pageNumber, int pageSize);
         Task<Models.Entities.ProjectTask?> GetByIdAsync(Guid id);
-        Task<IEnumerable<Models.Entities.ProjectTask>> GetTasksByProjectIdAsync(Guid projectId);
-        Task<IEnumerable<Models.Entities.ProjectTask>> GetTasksByStatusAsync(ProjectTaskStatus status);
-        Task<IEnumerable<Models.Entities.ProjectTask>> GetTasksByProjectIdAndStatusAsync(Guid projectId, ProjectTaskStatus status);
         #endregion
 
         #region Write Operations

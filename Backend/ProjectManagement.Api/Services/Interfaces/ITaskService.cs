@@ -12,7 +12,7 @@ namespace ProjectManagement.Api.Services.Interfaces
     /// </summary>
     public interface ITaskService
     {
-        Task<ApiResponse<IEnumerable<ProjectTaskDto>>> GetTasksAsync(Guid? projectId, ProjectTaskStatus? status);
+        Task<ApiResponse<ProjectManagement.Api.Wrappers.PagedList<ProjectTaskDto>>> GetTasksAsync(Guid? projectId, ProjectTaskStatus? status, int pageNumber = 1, int pageSize = 10);
         Task<ApiResponse<ProjectTaskDto>> GetTaskByIdAsync(Guid id);
         Task<ApiResponse<ProjectTaskDto>> CreateTaskAsync(ProjectTaskCreateDto createDto);
         Task<ApiResponse<ProjectTaskDto>> UpdateTaskAsync(Guid id, ProjectTaskUpdateDto updateDto);

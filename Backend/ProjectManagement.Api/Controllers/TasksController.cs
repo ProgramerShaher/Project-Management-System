@@ -25,9 +25,9 @@ namespace ProjectManagement.Api.Controllers
 
         #region Endpoint - GET ALL
         [HttpGet]
-        public async Task<ActionResult<ApiResponse<IEnumerable<ProjectTaskDto>>>> GetTasks([FromQuery] Guid? projectId, [FromQuery] ProjectTaskStatus? status)
+        public async Task<ActionResult<ApiResponse<ProjectManagement.Api.Wrappers.PagedList<ProjectTaskDto>>>> GetTasks([FromQuery] Guid? projectId, [FromQuery] ProjectTaskStatus? status, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            var response = await _taskService.GetTasksAsync(projectId, status);
+            var response = await _taskService.GetTasksAsync(projectId, status, pageNumber, pageSize);
             return Ok(response);
         }
         #endregion
