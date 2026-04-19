@@ -1,20 +1,38 @@
-using ProjectManagement.Api.Extensions; 
+ï»¿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using ProjectManagement.Api.Data;
+using ProjectManagement.Api.Extensions;
+using ProjectManagement.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. ÅÖÇİÉ ÇáÎÏãÇÊ ÇáÃÓÇÓíÉ
+// Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ù‚Ø§Ø¹Ø¯Ø© Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª (Connection String)
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø®Ø¯Ù…Ø§Øª ÙˆØ§Ù„Ù€ Repositories ÙˆØ§Ù„Ù€ AutoMapper Ø§Ù„Ø®Ø§Øµ Ø¨Ù†Ø§
+builder.Services.AddApplicationServices();
+
 builder.Services.AddControllers();
 
-// 2. ÇÓÊÎÏÇã ÇáÜ Extension ÇáĞí ÃäÔÃäÇå áÊÓÌíá Swagger
-builder.Services.AddSwaggerDocumentation();
+// Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª ÙˆØ§Ø¬Ù‡Ø© Swagger Ø§Ù„Ù‚Ø¯ÙŠÙ…Ø© Ø§Ù„Ù…Ø®ØµØµØ© Ù„Ø¯ÙŠÙƒÙ…
+if (System.Reflection.Assembly.GetExecutingAssembly().GetType("ProjectManagement.Api.Extensions.SwaggerServiceExtensions") != null)
+{
+    builder.Services.AddSwaggerGen(); // ÙƒØ¥Ø¬Ø±Ø§Ø¡ Ø§Ø­ØªÙŠØ§Ø·ÙŠ
+}
 
 var app = builder.Build();
 
-// 3. ÅÚÏÇÏ ÇáÜ Pipeline (Middlewares)
+// Ø§Ù„Ù…ÙŠØ¯Ù„ ÙˆÙŠØ± Ù„Ø§Ù„ØªÙ‚Ø§Ø· ÙƒÙ„ Ø§Ù„Ø£Ø®Ø·Ø§Ø¡ Ø¨Ø±Ù…Ø¬ÙŠØ§Ù‹ (ÙŠØ¬Ø¨ Ø£Ù† ÙŠÙƒÙˆÙ† ÙÙŠ Ø§Ù„Ø¨Ø¯Ø§ÙŠØ©)
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
-	// ÇÓÊÎÏÇã ÇáÜ Extension áÊİÚíá æÇÌåÉ ÓæÇÌíÑ
-	app.UseSwaggerDocumentation();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
