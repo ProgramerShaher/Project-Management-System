@@ -29,6 +29,11 @@ namespace ProjectManagement.Api.Models.Entities
         public ProjectTaskStatus Status { get; set; } = ProjectTaskStatus.Pending;
         
         /// <summary>
+        /// تاريخ بداية العمل على المهمة.
+        /// </summary>
+        public DateTime StartDate { get; set; }
+        
+        /// <summary>
         /// تاريخ الاستحقاق المطلوب إنجاز المهمة بحلوله.
         /// </summary>
         public DateTime DueDate { get; set; }

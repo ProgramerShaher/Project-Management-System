@@ -16,6 +16,9 @@ namespace ProjectManagement.Api.Models.DTOs.ProjectTask
         
         public string Description { get; set; } = string.Empty;
         
+        [Required(ErrorMessage = "تاريخ البداية مطلوب.")]
+        public DateTime StartDate { get; set; }
+        
         [Required(ErrorMessage = "تاريخ الاستحقاق مطلوب.")]
         public DateTime DueDate { get; set; }
         

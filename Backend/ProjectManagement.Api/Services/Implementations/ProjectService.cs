@@ -57,6 +57,12 @@ namespace ProjectManagement.Api.Services.Implementations
 
         public async Task<ApiResponse<ProjectDto>> CreateProjectAsync(ProjectCreateDto createDto)
         {
+            if (createDto.EndDate.HasValue && createDto.EndDate.Value <= createDto.StartDate)
+            {
+                _logger.LogWarning("محاولة إنشاء مشروع بتواريخ غير منطقية.");
+                return new ApiResponse<ProjectDto>("تاريخ نهاية المشروع يجب أن يكون بعد تاريخ بدايته.");
+            }
+
             var projectToCreate = _mapper.Map<Project>(createDto);
             var createdProject = await _projectRepository.AddAsync(projectToCreate);
 
@@ -68,6 +74,12 @@ namespace ProjectManagement.Api.Services.Implementations
 
         public async Task<ApiResponse<ProjectDto>> UpdateProjectAsync(Guid id, ProjectUpdateDto updateDto)
         {
+            if (updateDto.EndDate.HasValue && updateDto.EndDate.Value <= updateDto.StartDate)
+            {
+                _logger.LogWarning("محاولة تحديث مشروع بتواريخ غير منطقية: {Id}", id);
+                return new ApiResponse<ProjectDto>("تاريخ نهاية المشروع يجب أن يكون بعد تاريخ بدايته.");
+            }
+
             var existingProject = await _projectRepository.GetByIdAsync(id);
             if (existingProject == null)
                 return new ApiResponse<ProjectDto>("لا يوجد مشروع بهذا المعرف للتعديل.");

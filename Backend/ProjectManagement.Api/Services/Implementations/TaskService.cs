@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
@@ -59,12 +60,28 @@ namespace ProjectManagement.Api.Services.Implementations
 
         public async Task<ApiResponse<ProjectTaskDto>> CreateTaskAsync(ProjectTaskCreateDto createDto)
         {
+            if (createDto.DueDate <= createDto.StartDate)
+                return new ApiResponse<ProjectTaskDto>("تاريخ استحقاق المهمة يجب أن يكون بعد تاريخ بدايتها.");
+
             var projectExists = await _projectRepository.GetByIdAsync(createDto.ProjectId);
             if (projectExists == null)
             {
                 _logger.LogWarning("المشروع غير موجود. المشروع: {ProjectId}", createDto.ProjectId);
                 return new ApiResponse<ProjectTaskDto>("لا يمكن إضافة المهمة لأن المشروع المحدد غير موجود.");
             }
+
+            if (createDto.StartDate < projectExists.StartDate)
+                return new ApiResponse<ProjectTaskDto>("لا يمكن أن تبدأ المهمة قبل تاريخ بداية المشروع.");
+                
+            if (projectExists.EndDate.HasValue && createDto.DueDate > projectExists.EndDate.Value)
+                return new ApiResponse<ProjectTaskDto>("لا يمكن أن تنتهي المهمة بعد تاريخ نهاية المشروع.");
+
+            var pagedTasks = await _taskRepository.GetTasksAsync(createDto.ProjectId, null, 1, int.MaxValue);
+            bool isOverlapping = pagedTasks.Items.Any(t => 
+                (createDto.StartDate < t.DueDate) && (createDto.DueDate > t.StartDate));
+            
+            if (isOverlapping)
+                return new ApiResponse<ProjectTaskDto>("توجد مهمة أخرى تتعارض زمنياً مع هذه المهمة في نفس المشروع.");
 
             var taskToCreate = _mapper.Map<Models.Entities.ProjectTask>(createDto);
             var createdTask = await _taskRepository.AddAsync(taskToCreate);
@@ -77,9 +94,29 @@ namespace ProjectManagement.Api.Services.Implementations
 
         public async Task<ApiResponse<ProjectTaskDto>> UpdateTaskAsync(Guid id, ProjectTaskUpdateDto updateDto)
         {
+            if (updateDto.DueDate <= updateDto.StartDate)
+                return new ApiResponse<ProjectTaskDto>("تاريخ استحقاق المهمة يجب أن يكون بعد تاريخ بدايتها.");
+
             var existingTask = await _taskRepository.GetByIdAsync(id);
             if (existingTask == null)
                 return new ApiResponse<ProjectTaskDto>("المهمة غير موجودة.");
+
+            var projectExists = await _projectRepository.GetByIdAsync(existingTask.ProjectId);
+            if (projectExists != null)
+            {
+                if (updateDto.StartDate < projectExists.StartDate)
+                    return new ApiResponse<ProjectTaskDto>("لا يمكن أن تبدأ المهمة قبل تاريخ بداية المشروع.");
+                    
+                if (projectExists.EndDate.HasValue && updateDto.DueDate > projectExists.EndDate.Value)
+                    return new ApiResponse<ProjectTaskDto>("لا يمكن أن تنتهي المهمة بعد تاريخ نهاية المشروع.");
+
+                var pagedTasks = await _taskRepository.GetTasksAsync(existingTask.ProjectId, null, 1, int.MaxValue);
+                bool isOverlapping = pagedTasks.Items.Any(t => 
+                    t.Id != id && (updateDto.StartDate < t.DueDate) && (updateDto.DueDate > t.StartDate));
+                
+                if (isOverlapping)
+                    return new ApiResponse<ProjectTaskDto>("توجد مهمة أخرى تتعارض زمنياً مع هذه المهمة في نفس المشروع.");
+            }
 
             _mapper.Map(updateDto, existingTask);
             await _taskRepository.UpdateAsync(existingTask);
