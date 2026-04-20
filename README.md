@@ -76,22 +76,32 @@
 
 ---
 
-## 📂 هيكلية المشروع (Project Structure)
+## 📁 هيكلية المشروع (Project Structure)
 
-تبنى هذه المنظومة على مبدأ فصل المهام (Separation of Concerns)، إليك الهيكلية الكاملة للنظام:
-
-```text
-========================================================================
-💻 أولاً: الواجهة الأمامية (Frontend Structure)
-========================================================================
+### Frontend Structure
+\`\`\`text
 src/
-└── app/
-    ├── core/
-    ├── layout/
-    ├── features/
-    │   ├── projects/      # إدارة المشاريع (CRUD)
-    │   └── tasks/         # إدارة المهام والفلترة
-    └── app.routes.ts
+├── app/
+│   ├── core/           # النماذج، خدمات الاتصال (API Services)، Interceptors
+│   ├── layout/         # الهيكل الأساسي للتطبيق (Sidebar, Header)
+│   ├── features/       # مكونات النظام الرئيسية
+│   │   ├── projects/   # شاشة عرض المشاريع ونموذج الإضافة والتعديل
+│   │   └── tasks/      # شاشة عرض المهام والفلترة
+│   └── app.routes.ts   # موجه التطبيق
+└── styles.scss         # الإستايلات الأساسية لنظام التصميم المتكامل (Tokens)
+\`\`\`
+
+### Backend Structure
+\`\`\`text
+ProjectManagement.Api/
+├── Controllers/        # واجهات التحكم (Endpoints) للـ API
+├── Models/
+│   ├── Entities/       # كيانات قاعدة البيانات المباشرة
+│   └── DTOs/           # كائنات تبادل البيانات
+├── Repositories/       # طبقة التفاعل مع الـ Database (I...Repository & Implementation)
+├── Services/           # طبقة الأعمال واللوجيك (التحقق من التواريخ وإدارة الـ DTOs)
+└── Wrappers/           # تغليفات الاستجابات مثل PagedList و ApiResponse
+\`\`\`
 
 ---
 
