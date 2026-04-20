@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ProjectManagement.Api.Models.Entities;
+using ProjectManagement.Api.Wrappers;
 
 namespace ProjectManagement.Api.Repositories.Interfaces
 {
@@ -11,7 +12,7 @@ namespace ProjectManagement.Api.Repositories.Interfaces
     public interface IProjectRepository
     {
         #region Read Operations
-        Task<ProjectManagement.Api.Wrappers.PagedList<Project>> GetAllAsync(int pageNumber, int pageSize);
+        Task<PagedList<Project>> GetAllAsync(int pageNumber, int pageSize);
         Task<Project?> GetByIdAsync(Guid id);
         #endregion
 

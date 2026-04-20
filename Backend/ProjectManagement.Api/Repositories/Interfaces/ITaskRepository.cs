@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ProjectManagement.Api.Models.Entities;
 using ProjectManagement.Api.Models.Enums;
+using ProjectManagement.Api.Wrappers;
 
 namespace ProjectManagement.Api.Repositories.Interfaces
 {
@@ -12,14 +13,14 @@ namespace ProjectManagement.Api.Repositories.Interfaces
     public interface ITaskRepository
     {
         #region Read Operations
-        Task<ProjectManagement.Api.Wrappers.PagedList<Models.Entities.ProjectTask>> GetTasksAsync(Guid? projectId, ProjectTaskStatus? status, int pageNumber, int pageSize);
-        Task<Models.Entities.ProjectTask?> GetByIdAsync(Guid id);
+        Task<PagedList<ProjectTask>> GetTasksAsync(Guid? projectId, ProjectTaskStatus? status, int pageNumber, int pageSize);
+        Task<ProjectTask?> GetByIdAsync(Guid id);
         #endregion
 
         #region Write Operations
-        Task<Models.Entities.ProjectTask> AddAsync(Models.Entities.ProjectTask task);
-        Task UpdateAsync(Models.Entities.ProjectTask task);
-        Task DeleteAsync(Models.Entities.ProjectTask task);
+        Task<ProjectTask> AddAsync(ProjectTask task);
+        Task UpdateAsync(ProjectTask task);
+        Task DeleteAsync(ProjectTask task);
         #endregion
     }
 }

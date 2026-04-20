@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Api.Data;
 using ProjectManagement.Api.Models.Entities;
 using ProjectManagement.Api.Repositories.Interfaces;
+using ProjectManagement.Api.Wrappers;
 
 namespace ProjectManagement.Api.Repositories.Implementations
 {
@@ -25,13 +26,13 @@ namespace ProjectManagement.Api.Repositories.Implementations
         #endregion
 
         #region Read Operations
-        public async Task<ProjectManagement.Api.Wrappers.PagedList<Project>> GetAllAsync(int pageNumber, int pageSize)
+        public async Task<PagedList<Project>> GetAllAsync(int pageNumber, int pageSize)
         {
             var query = _context.Projects.Include(p => p.Tasks).AsNoTracking();
             var count = await query.CountAsync();
             var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
             
-            return new ProjectManagement.Api.Wrappers.PagedList<Project>(items, count, pageNumber, pageSize);
+            return new PagedList<Project>(items, count, pageNumber, pageSize);
         }
 
         public async Task<Project?> GetByIdAsync(Guid id)

@@ -32,14 +32,14 @@ namespace ProjectManagement.Api.Services.Implementations
         #endregion
 
         #region Methods
-        public async Task<ApiResponse<ProjectManagement.Api.Wrappers.PagedList<ProjectDto>>> GetAllProjectsAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<ApiResponse<PagedList<ProjectDto>>> GetAllProjectsAsync(int pageNumber = 1, int pageSize = 10)
         {
             var pagedProjects = await _projectRepository.GetAllAsync(pageNumber, pageSize);
             var dtos = _mapper.Map<List<ProjectDto>>(pagedProjects.Items);
-            var pagedDtos = new ProjectManagement.Api.Wrappers.PagedList<ProjectDto>(dtos, pagedProjects.TotalCount, pagedProjects.PageNumber, pagedProjects.PageSize);
+            var pagedDtos = new PagedList<ProjectDto>(dtos, pagedProjects.TotalCount, pagedProjects.PageNumber, pagedProjects.PageSize);
             
             _logger.LogInformation("تم تجهيز بيانات المشاريع في طبقة الخدمات مع تقسيم الصفحات.");
-            return new ApiResponse<ProjectManagement.Api.Wrappers.PagedList<ProjectDto>>(pagedDtos, "تم استرجاع المشاريع بنجاح.");
+            return new ApiResponse<PagedList<ProjectDto>>(pagedDtos, "تم استرجاع المشاريع بنجاح.");
         }
 
         public async Task<ApiResponse<ProjectDto>> GetProjectByIdAsync(Guid id)
