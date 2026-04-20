@@ -76,32 +76,30 @@
 
 ---
 
-## 📁 هيكلية المشروع (Project Structure)
+## 📂 هيكلية المشروع (Project Structure)
 
-### Frontend Structure
-\`\`\`text
+تبنى هذه المنظومة على مبدأ **Separation of Concerns**، مع تنظيم دقيق لكل من الجانب الأمامي والخلفي لضمان سهولة الصيانة.
+
+### 💻 بنية الواجهة الأمامية (Frontend Structure)
+*تعتمد على إطار عمل **Angular** بتنظيم موديولار (Feature-based).*
+
+| المسار | الوصف والمسؤولية |
+| :--- | :--- |
+| `core/` | النماذج الأساسية، خدمات الـ API، والـ Interceptors. |
+| `layout/` | العناصر الهيكلية الثابتة مثل الـ Sidebar والـ Header. |
+| `features/` | الوظائف الحيوية (المشاريع والمهام) مفصولة في موديولات مستقلة. |
+| `app.routes.ts` | إدارة التنقل (Routing) بين صفحات النظام. |
+| `styles.scss` | نظام التصميم المتكامل (Design Tokens) لتوحيد الواجهات. |
+
+```text
 src/
-├── app/
-│   ├── core/           # النماذج، خدمات الاتصال (API Services)، Interceptors
-│   ├── layout/         # الهيكل الأساسي للتطبيق (Sidebar, Header)
-│   ├── features/       # مكونات النظام الرئيسية
-│   │   ├── projects/   # شاشة عرض المشاريع ونموذج الإضافة والتعديل
-│   │   └── tasks/      # شاشة عرض المهام والفلترة
-│   └── app.routes.ts   # موجه التطبيق
-└── styles.scss         # الإستايلات الأساسية لنظام التصميم المتكامل (Tokens)
-\`\`\`
-
-### Backend Structure
-\`\`\`text
-ProjectManagement.Api/
-├── Controllers/        # واجهات التحكم (Endpoints) للـ API
-├── Models/
-│   ├── Entities/       # كيانات قاعدة البيانات المباشرة
-│   └── DTOs/           # كائنات تبادل البيانات
-├── Repositories/       # طبقة التفاعل مع الـ Database (I...Repository & Implementation)
-├── Services/           # طبقة الأعمال واللوجيك (التحقق من التواريخ وإدارة الـ DTOs)
-└── Wrappers/           # تغليفات الاستجابات مثل PagedList و ApiResponse
-\`\`\`
+└── app/
+    ├── core/
+    ├── layout/
+    ├── features/
+    │   ├── projects/      # إدارة المشاريع (CRUD)
+    │   └── tasks/         # إدارة المهام والفلترة
+    └── app.routes.ts
 
 ---
 
