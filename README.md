@@ -75,7 +75,6 @@
 4. افتح المتصفح على الرابط: \`http://localhost:4200\`
 
 ---
-
 ## 📂 هيكلية المشروع (Project Structure)
 
 تبنى هذه المنظومة على مبدأ **Separation of Concerns**، مع تنظيم دقيق لكل من الجانب الأمامي والخلفي لضمان سهولة الصيانة.
@@ -94,13 +93,14 @@
 ```text
 src/
 └── app/
-    ├── core/
-    ├── layout/
-    ├── features/
-    │   ├── projects/      # إدارة المشاريع (CRUD)
-    │   └── tasks/         # إدارة المهام والفلترة
-    └── app.routes.ts
-
+    ├── core/          # Shared services & models
+    ├── layout/        # Shell components (Header/Sidebar)
+    ├── features/      # Business modules
+    │   ├── projects/  # Projects Management (CRUD)
+    │   └── tasks/     # Tasks & Filtering logic
+    ├── app.routes.ts  # Application routing
+    └── styles.scss    # Global design tokens
+---
 ---
 
 مبني بإتقان وحب وشغف للبرمجة واهتمام بإنتاج كود نظيف واحترافي. ❤️
