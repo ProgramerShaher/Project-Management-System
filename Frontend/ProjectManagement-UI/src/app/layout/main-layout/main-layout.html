@@ -1,0 +1,59 @@
+<nz-layout class="app-layout">
+  <!-- ===== SIDEBAR ===== -->
+  <nz-sider
+    nzCollapsible
+    [nzCollapsed]="isCollapsed()"
+    (nzCollapsedChange)="isCollapsed.set($event)"
+    [nzWidth]="240"
+    [nzCollapsedWidth]="72"
+    class="sidebar"
+  >
+    <!-- Logo -->
+    <div class="sidebar-logo" [class.collapsed]="isCollapsed()">
+      <div class="logo-icon">
+        <span nz-icon nzType="project" nzTheme="outline"></span>
+      </div>
+      @if (!isCollapsed()) {
+        <div class="logo-text">
+          <span class="logo-title">ProjectHub</span>
+          <span class="logo-subtitle">إدارة المشاريع</span>
+        </div>
+      }
+    </div>
+
+    <!-- Navigation -->
+    <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isCollapsed()" class="sidebar-menu">
+      <li nz-menu-item routerLink="/projects" routerLinkActive="ant-menu-item-selected">
+        <span nz-icon nzType="folder"></span>
+        <span>المشاريع</span>
+      </li>
+      <li nz-menu-item routerLink="/tasks" routerLinkActive="ant-menu-item-selected">
+        <span nz-icon nzType="check-square"></span>
+        <span>المهام</span>
+      </li>
+    </ul>
+  </nz-sider>
+
+  <!-- ===== MAIN AREA ===== -->
+  <nz-layout class="inner-layout">
+    <!-- Header -->
+    <nz-header class="app-header">
+      <div class="header-left">
+        <button class="collapse-btn" (click)="toggleSidebar()">
+          <span nz-icon [nzType]="isCollapsed() ? 'menu-unfold' : 'menu-fold'"></span>
+        </button>
+      </div>
+      <div class="header-right">
+        <nz-avatar nzText="م" nzSize="default" class="user-avatar"></nz-avatar>
+        <span class="user-name">مدير النظام</span>
+      </div>
+    </nz-header>
+
+    <!-- Content -->
+    <nz-content class="app-content">
+      <div class="content-wrapper">
+        <router-outlet />
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

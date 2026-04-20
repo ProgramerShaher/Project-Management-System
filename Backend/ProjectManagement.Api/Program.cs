@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +9,18 @@ using ProjectManagement.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ===== إعداد CORS للسماح لتطبيق Angular بالوصول =====
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 // إضافة الاتصال بقاعدة البيانات (Connection String)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -17,12 +29,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddApplicationServices();
 
 builder.Services.AddControllers();
-
-// إعدادات واجهة Swagger القديمة المخصصة لديكم
-if (System.Reflection.Assembly.GetExecutingAssembly().GetType("ProjectManagement.Api.Extensions.SwaggerServiceExtensions") != null)
-{
-    builder.Services.AddSwaggerGen(); // كإجراء احتياطي
-}
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -34,6 +42,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// ===== تطبيق سياسة CORS قبل أي شيء آخر =====
+app.UseCors("AllowAngular");
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
