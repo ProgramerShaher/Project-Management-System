@@ -79,7 +79,7 @@
 3.  قم بتشغيل خادم التطوير لـ Angular:
 
     ```bash
-    npx ng serve
+    ng serve -o
     ```
 
 4.  افتح المتصفح على الرابط: `http://localhost:4200`.
