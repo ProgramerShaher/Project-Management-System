@@ -80,8 +80,14 @@ html, body {
   }
 }
 
+// ===== NG-ZORRO RTL FIX =====
+.ant-table-wrapper {
+  direction: rtl;
+}
+
 .ant-table {
   font-family: 'Cairo', sans-serif !important;
+  direction: rtl !important;
 }
 
 .ant-table-thead > tr > th {
@@ -93,16 +99,23 @@ html, body {
   letter-spacing: 0.8px !important;
   border-bottom: 2px solid var(--border) !important;
   padding: 14px 16px !important;
+  text-align: right !important;
 }
 
 .ant-table-tbody > tr > td {
   padding: 14px 16px !important;
   border-bottom: 1px solid #f1f5f9 !important;
   transition: background 0.15s !important;
+  text-align: right !important;
 }
 
 .ant-table-tbody > tr:hover > td {
   background: #f8f9ff !important;
+}
+
+.ant-table-column-sorter {
+  margin-right: 4px;
+  margin-left: 0 !important;
 }
 
 .ant-drawer-header {
