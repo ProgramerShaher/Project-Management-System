@@ -23,6 +23,7 @@ import { ProjectService } from '../../../core/services/project.service';
 import { ProjectTaskDto, ProjectTaskCreateDto, ProjectTaskUpdateDto, ProjectTaskStatus } from '../../../core/models/project-task.model';
 import { ProjectDto } from '../../../core/models/project.model';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
+import { NzModalModule } from "ng-zorro-antd/modal";
 
 @Component({
   selector: 'app-task-list',
@@ -32,7 +33,8 @@ import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
     NzInputModule, NzDatePickerModule, NzTagModule, NzSpinModule,
     NzTooltipModule, NzDividerModule, NzDrawerModule, NzPopconfirmModule,
     NzSelectModule, NzCardModule, NzStatisticModule,
-  ],
+    NzModalModule
+],
   templateUrl: './task-list.html',
   styleUrl: './task-list.scss',
 })
@@ -46,7 +48,7 @@ export class TaskList implements OnInit {
   tasks = signal<ProjectTaskDto[]>([]);
   projects = signal<ProjectDto[]>([]);
   isLoading = signal(false);
-  isDrawerVisible = signal(false);
+  isModalVisible = signal(false);
   isSaving = signal(false);
   editingTask = signal<ProjectTaskDto | null>(null);
   pageNumber = signal(1);
@@ -66,7 +68,7 @@ export class TaskList implements OnInit {
     { value: ProjectTaskStatus.Completed, label: 'مكتملة', color: 'success' },
   ];
 
-  drawerTitle = computed(() =>
+  modalTitle = computed(() =>
     this.editingTask() ? 'تعديل المهمة' : 'إضافة مهمة جديدة'
   );
 
@@ -132,13 +134,13 @@ export class TaskList implements OnInit {
     this.loadTasks();
   }
 
-  openCreateDrawer(): void {
+  openCreateModal(): void {
     this.editingTask.set(null);
     this.form.reset({ status: ProjectTaskStatus.Pending });
-    this.isDrawerVisible.set(true);
+    this.isModalVisible.set(true);
   }
 
-  openEditDrawer(task: ProjectTaskDto): void {
+  openEditModal(task: ProjectTaskDto): void {
     this.editingTask.set(task);
     this.form.patchValue({
       title: task.title,
@@ -148,11 +150,11 @@ export class TaskList implements OnInit {
       startDate: new Date(task.startDate),
       dueDate: new Date(task.dueDate),
     });
-    this.isDrawerVisible.set(true);
+    this.isModalVisible.set(true);
   }
 
-  closeDrawer(): void {
-    this.isDrawerVisible.set(false);
+  closeModal(): void {
+    this.isModalVisible.set(false);
   }
 
   getProjectForTask(): ProjectDto | null {
@@ -202,7 +204,7 @@ export class TaskList implements OnInit {
         next: (res) => {
           if (res.success) {
             this.notification.success('نجاح', 'تم تعديل المهمة بنجاح.');
-            this.closeDrawer();
+            this.closeModal();
             this.loadTasks();
           } else {
             this.notification.error('خطأ في التواريخ', res.message ?? '');
@@ -224,7 +226,7 @@ export class TaskList implements OnInit {
         next: (res) => {
           if (res.success) {
             this.notification.success('نجاح', 'تمت إضافة المهمة بنجاح.');
-            this.closeDrawer();
+            this.closeModal();
             this.loadTasks();
           } else {
             this.notification.error('خطأ في التواريخ', res.message ?? '');

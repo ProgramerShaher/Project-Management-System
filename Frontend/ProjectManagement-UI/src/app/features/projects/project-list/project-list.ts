@@ -45,7 +45,7 @@ export class ProjectList implements OnInit {
   // ===== Signals =====
   projects = signal<ProjectDto[]>([]);
   isLoading = signal(false);
-  isDrawerVisible = signal(false);
+  isModalVisible = signal(false);
   isSaving = signal(false);
   editingProject = signal<ProjectDto | null>(null);
   pageNumber = signal(1);
@@ -53,7 +53,7 @@ export class ProjectList implements OnInit {
   totalCount = signal(0);
 
   // ===== Computed =====
-  drawerTitle = computed(() =>
+  modalTitle = computed(() =>
     this.editingProject() ? 'تعديل المشروع' : 'إضافة مشروع جديد'
   );
 
@@ -92,13 +92,13 @@ export class ProjectList implements OnInit {
     });
   }
 
-  openCreateDrawer(): void {
+  openCreateModal(): void {
     this.editingProject.set(null);
     this.form.reset();
-    this.isDrawerVisible.set(true);
+    this.isModalVisible.set(true);
   }
 
-  openEditDrawer(project: ProjectDto): void {
+  openEditModal(project: ProjectDto): void {
     this.editingProject.set(project);
     this.form.patchValue({
       name: project.name,
@@ -106,11 +106,11 @@ export class ProjectList implements OnInit {
       startDate: project.startDate ? new Date(project.startDate) : null,
       endDate: project.endDate ? new Date(project.endDate) : null,
     });
-    this.isDrawerVisible.set(true);
+    this.isModalVisible.set(true);
   }
 
-  closeDrawer(): void {
-    this.isDrawerVisible.set(false);
+  closeModal(): void {
+    this.isModalVisible.set(false);
   }
 
   disabledEndDate = (endDate: Date): boolean => {
@@ -147,7 +147,7 @@ export class ProjectList implements OnInit {
       next: (res) => {
         if (res.success) {
           this.notification.success('نجاح', editing ? 'تم تعديل المشروع بنجاح.' : 'تم إنشاء المشروع بنجاح.');
-          this.closeDrawer();
+          this.closeModal();
           this.loadProjects();
         } else {
           this.notification.error('خطأ', res.message ?? 'فشلت العملية.');
