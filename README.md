@@ -3,10 +3,7 @@
 نظام متكامل لإدارة المشاريع والمهام تم تصميمه وبناؤه بأحدث التقنيات مع التركيز على المعمارية النظيفة (Clean Architecture) وتجربة المستخدم (UX/UI) العصرية.
 [ProjectHub Preview](assets/images/Lists%20Projects.png)
 [TaskHub Preview](assets/images/Lists%20Tasks.png)
-[ProjectHub Preview](assets/images/Add%20Projet.png)
-[TaskHub Preview](assets/images/New%20Task.png)
-[ProjectHub Preview](assets/images/Edit%20Project.png)
-[TaskHub Preview](assets/images/Edit%20Task.png)
+
 
 
 ## 🌟 الميزات الرئيسية (Key Features)
