@@ -1,48 +1,50 @@
 <!-- ===== PAGE HEADER ===== -->
 <div class="page-header">
   <div class="header-info">
-    <h1 class="page-title">
-      <span nz-icon nzType="folder" nzTheme="outline" class="title-icon"></span>
-      إدارة المشاريع
-    </h1>
-    <p class="page-subtitle">إدارة ومتابعة جميع مشاريع المنظمة</p>
+    <p class="eyebrow">لوحة التحكم</p>
+    <h1 class="page-title">المشاريع</h1>
+    <p class="page-subtitle">إدارة ومتابعة جميع مشاريع المنظمة بكفاءة عالية</p>
   </div>
-  <button nz-button nzType="primary" class="add-btn" (click)="openCreateDrawer()">
-    <span nz-icon nzType="plus"></span>
-    إضافة مشروع
-  </button>
-</div>
-
-<!-- ===== STATS CARDS ===== -->
-<div class="stats-row">
-  <nz-card class="stat-card">
-    <nz-statistic
-      [nzValue]="totalCount()"
-      nzTitle="إجمالي المشاريع"
-      [nzPrefix]="folderIcon"
-      [nzValueStyle]="{ color: '#6366f1', 'font-size': '32px', 'font-weight': '700' }"
-    ></nz-statistic>
-    <ng-template #folderIcon><span nz-icon nzType="folder" style="color:#6366f1"></span></ng-template>
-  </nz-card>
-  <nz-card class="stat-card">
-    <nz-statistic
-      [nzValue]="totalTaskCount()"
-      nzTitle="إجمالي المهام"
-      [nzPrefix]="taskIcon"
-      [nzValueStyle]="{ color: '#10b981', 'font-size': '32px', 'font-weight': '700' }"
-    ></nz-statistic>
-    <ng-template #taskIcon><span nz-icon nzType="check-square" style="color:#10b981"></span></ng-template>
-  </nz-card>
-</div>
-
-<!-- ===== DATA TABLE ===== -->
-<nz-card class="table-card">
-  <div class="table-header">
-    <h2 class="table-title">قائمة المشاريع</h2>
-    <button nz-button nzType="default" (click)="loadProjects()">
+  <div class="header-actions">
+    <button nz-button nzType="default" class="refresh-btn" (click)="loadProjects()">
       <span nz-icon nzType="reload"></span>
-      تحديث
     </button>
+    <button nz-button nzType="primary" class="add-btn" (click)="openCreateDrawer()">
+      <span nz-icon nzType="plus"></span>
+      مشروع جديد
+    </button>
+  </div>
+</div>
+
+<!-- ===== STATS ===== -->
+<div class="stats-grid">
+  <nz-card class="stat-card">
+    <div class="stat-inner">
+      <div class="stat-icon purple"><span nz-icon nzType="folder"></span></div>
+      <div class="stat-info">
+        <div class="stat-value purple">{{ totalCount() }}</div>
+        <div class="stat-label">إجمالي المشاريع</div>
+      </div>
+    </div>
+  </nz-card>
+  <nz-card class="stat-card">
+    <div class="stat-inner">
+      <div class="stat-icon green"><span nz-icon nzType="check-square"></span></div>
+      <div class="stat-info">
+        <div class="stat-value green">{{ totalTaskCount() }}</div>
+        <div class="stat-label">إجمالي المهام</div>
+      </div>
+    </div>
+  </nz-card>
+</div>
+
+<!-- ===== TABLE CARD ===== -->
+<nz-card class="table-card">
+  <div class="table-toolbar">
+    <div class="toolbar-left">
+      <h2 class="table-title">قائمة المشاريع</h2>
+      <span class="count-chip">{{ totalCount() }} مشروع</span>
+    </div>
   </div>
 
   <nz-table
@@ -56,81 +58,74 @@
     (nzPageIndexChange)="onPageChange($event)"
     nzShowSizeChanger
     [nzPageSizeOptions]="[10, 20, 50]"
-    class="projects-table"
   >
     <thead>
       <tr>
-        <th nzWidth="50px">#</th>
-        <th>اسم المشروع</th>
+        <th nzWidth="60px" nzAlign="center">#</th>
+        <th>المشروع</th>
         <th>الوصف</th>
-        <th nzWidth="140px">تاريخ البداية</th>
-        <th nzWidth="140px">تاريخ النهاية</th>
-        <th nzWidth="110px" nzAlign="center">المهام</th>
-        <th nzWidth="150px" nzAlign="center">الإجراءات</th>
+        <th nzWidth="150px">تاريخ البداية</th>
+        <th nzWidth="150px">تاريخ النهاية</th>
+        <th nzWidth="100px" nzAlign="center">المهام</th>
+        <th nzWidth="120px" nzAlign="center">الإجراءات</th>
       </tr>
     </thead>
     <tbody>
       @for (project of projectTable.data; track project.id; let i = $index) {
-        <tr class="table-row">
-          <td class="row-index">{{ (pageNumber() - 1) * pageSize() + i + 1 }}</td>
+        <tr>
+          <td nzAlign="center">
+            <span class="idx-cell">{{ (pageNumber() - 1) * pageSize() + i + 1 }}</span>
+          </td>
           <td>
             <div class="project-name-cell">
-              <div class="project-avatar">{{ project.name.charAt(0) }}</div>
-              <div class="project-info">
-                <span class="project-name">{{ project.name }}</span>
+              <div class="project-avatar av-{{ (i % 7) + 1 }}">
+                {{ project.name.charAt(0) }}
+              </div>
+              <div>
+                <div class="project-name-text">{{ project.name }}</div>
               </div>
             </div>
           </td>
-          <td class="description-cell">
-            <span nz-tooltip [nzTooltipTitle]="project.description">
-              {{ project.description | slice: 0:60 }}{{ project.description.length > 60 ? '...' : '' }}
+          <td>
+            <span class="description-cell" nz-tooltip [nzTooltipTitle]="project.description">
+              {{ project.description | slice:0:55 }}{{ project.description.length > 55 ? '…' : '' }}
             </span>
           </td>
           <td>
-            <div class="date-cell">
-              <span nz-icon nzType="calendar" style="color:#6366f1; margin-left:6px;"></span>
+            <span class="date-chip">
+              <span nz-icon nzType="calendar" style="color:#6366f1"></span>
               {{ project.startDate | date:'yyyy/MM/dd' }}
-            </div>
+            </span>
           </td>
           <td>
             @if (project.endDate) {
-              <div class="date-cell">
-                <span nz-icon nzType="calendar" style="color:#10b981; margin-left:6px;"></span>
+              <span class="date-chip">
+                <span nz-icon nzType="calendar" style="color:#10b981"></span>
                 {{ project.endDate | date:'yyyy/MM/dd' }}
-              </div>
+              </span>
             } @else {
-              <nz-tag>مفتوح</nz-tag>
+              <nz-tag nzColor="default">مفتوح</nz-tag>
             }
           </td>
           <td nzAlign="center">
-            <nz-badge
-              [nzCount]="project.taskCount"
-              [nzStyle]="{ backgroundColor: '#6366f1' }"
-              [nzShowZero]="true"
-            ></nz-badge>
+            <span class="task-count-badge">{{ project.taskCount }}</span>
           </td>
           <td nzAlign="center">
-            <button
-              nz-button nzType="default" nzShape="circle" nzSize="small"
-              nz-tooltip nzTooltipTitle="تعديل"
-              (click)="openEditDrawer(project)"
-              class="action-btn edit-btn"
-            >
-              <span nz-icon nzType="edit"></span>
-            </button>
-            <nz-divider nzType="vertical"></nz-divider>
-            <button
-              nz-button nzType="default" nzDanger nzShape="circle" nzSize="small"
-              nz-tooltip nzTooltipTitle="حذف"
-              nz-popconfirm
-              nzPopconfirmTitle="هل أنت متأكد من حذف هذا المشروع؟"
-              nzOkText="نعم, احذف"
-              nzCancelText="إلغاء"
-              (nzOnConfirm)="deleteProject(project.id)"
-              class="action-btn"
-            >
-              <span nz-icon nzType="delete"></span>
-            </button>
+            <div class="action-group">
+              <button nz-button nzShape="circle" class="action-btn edit"
+                nz-tooltip nzTooltipTitle="تعديل"
+                (click)="openEditDrawer(project)">
+                <span nz-icon nzType="edit"></span>
+              </button>
+              <button nz-button nzShape="circle" class="action-btn delete"
+                nz-tooltip nzTooltipTitle="حذف"
+                nz-popconfirm
+                nzPopconfirmTitle="هل أنت متأكد من حذف هذا المشروع؟"
+                nzOkText="حذف" nzCancelText="إلغاء"
+                (nzOnConfirm)="deleteProject(project.id)">
+                <span nz-icon nzType="delete"></span>
+              </button>
+            </div>
           </td>
         </tr>
       }
@@ -138,73 +133,64 @@
   </nz-table>
 </nz-card>
 
-<!-- ===== DRAWER (Create / Edit) ===== -->
+<!-- ===== DRAWER ===== -->
 <nz-drawer
   [nzVisible]="isDrawerVisible()"
   [nzTitle]="drawerTitle()"
-  nzWidth="480"
+  nzWidth="500"
   nzPlacement="left"
+  nzWrapClassName="project-drawer"
   (nzOnClose)="closeDrawer()"
 >
   <ng-container *nzDrawerContent>
-    <form nz-form [formGroup]="form" nzLayout="vertical" class="project-form">
+    <div class="drawer-form-wrapper">
+      <div class="drawer-body">
+        <form nz-form [formGroup]="form" nzLayout="vertical">
 
-      <nz-form-item>
-        <nz-form-label nzRequired>اسم المشروع</nz-form-label>
-        <nz-form-control nzErrorTip="اسم المشروع مطلوب (200 حرف كحد أقصى).">
-          <input nz-input formControlName="name" placeholder="أدخل اسم المشروع..." />
-        </nz-form-control>
-      </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzRequired>اسم المشروع</nz-form-label>
+            <nz-form-control nzErrorTip="الاسم مطلوب.">
+              <input nz-input formControlName="name" placeholder="أدخل اسم المشروع..." />
+            </nz-form-control>
+          </nz-form-item>
 
-      <nz-form-item>
-        <nz-form-label>الوصف</nz-form-label>
-        <nz-form-control>
-          <textarea
-            nz-input
-            formControlName="description"
-            [nzAutosize]="{ minRows: 3, maxRows: 6 }"
-            placeholder="وصف مختصر للمشروع وأهدافه..."
-          ></textarea>
-        </nz-form-control>
-      </nz-form-item>
+          <nz-form-item>
+            <nz-form-label>الوصف</nz-form-label>
+            <nz-form-control>
+              <textarea nz-input formControlName="description"
+                [nzAutosize]="{ minRows: 3, maxRows: 6 }"
+                placeholder="وصف مختصر للمشروع وأهدافه...">
+              </textarea>
+            </nz-form-control>
+          </nz-form-item>
 
-      <div class="form-row">
-        <nz-form-item class="half">
-          <nz-form-label nzRequired>تاريخ البداية</nz-form-label>
-          <nz-form-control nzErrorTip="تاريخ البداية مطلوب.">
-            <nz-date-picker
-              formControlName="startDate"
-              nzPlaceHolder="اختر التاريخ"
-              style="width: 100%"
-            ></nz-date-picker>
-          </nz-form-control>
-        </nz-form-item>
+          <div class="form-row">
+            <nz-form-item>
+              <nz-form-label nzRequired>تاريخ البداية</nz-form-label>
+              <nz-form-control nzErrorTip="مطلوب.">
+                <nz-date-picker formControlName="startDate" nzPlaceHolder="اختر" style="width:100%"></nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label>تاريخ النهاية</nz-form-label>
+              <nz-form-control>
+                <nz-date-picker formControlName="endDate" nzPlaceHolder="اختياري"
+                  [nzDisabledDate]="disabledEndDate" style="width:100%">
+                </nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
 
-        <nz-form-item class="half">
-          <nz-form-label>تاريخ النهاية</nz-form-label>
-          <nz-form-control>
-            <nz-date-picker
-              formControlName="endDate"
-              nzPlaceHolder="اختياري"
-              [nzDisabledDate]="disabledEndDate"
-              style="width: 100%"
-            ></nz-date-picker>
-          </nz-form-control>
-        </nz-form-item>
+        </form>
       </div>
 
-      <div class="drawer-actions">
-        <button nz-button nzType="default" (click)="closeDrawer()" type="button">إلغاء</button>
-        <button
-          nz-button nzType="primary"
-          [nzLoading]="isSaving()"
-          (click)="saveProject()"
-          type="button"
-        >
+      <div class="drawer-footer">
+        <button nz-button class="cancel-btn" (click)="closeDrawer()">إلغاء</button>
+        <button nz-button nzType="primary" class="save-btn" [nzLoading]="isSaving()" (click)="saveProject()">
           <span nz-icon nzType="save"></span>
           {{ editingProject() ? 'حفظ التعديلات' : 'إنشاء المشروع' }}
         </button>
       </div>
-    </form>
+    </div>
   </ng-container>
 </nz-drawer>

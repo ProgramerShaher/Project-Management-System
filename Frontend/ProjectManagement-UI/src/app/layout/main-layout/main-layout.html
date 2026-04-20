@@ -1,25 +1,33 @@
 <nz-layout class="app-layout">
-  <!-- ===== SIDEBAR ===== -->
+
+  <!-- ========== SIDEBAR ========== -->
   <nz-sider
     nzCollapsible
     [nzCollapsed]="isCollapsed()"
     (nzCollapsedChange)="isCollapsed.set($event)"
-    [nzWidth]="240"
+    [nzWidth]="260"
     [nzCollapsedWidth]="72"
     class="sidebar"
   >
     <!-- Logo -->
     <div class="sidebar-logo" [class.collapsed]="isCollapsed()">
-      <div class="logo-icon">
-        <span nz-icon nzType="project" nzTheme="outline"></span>
+      <div class="logo-icon-wrap">
+        <div class="logo-icon">
+          <span nz-icon nzType="project" nzTheme="outline"></span>
+        </div>
+        <div class="logo-glow"></div>
       </div>
       @if (!isCollapsed()) {
         <div class="logo-text">
           <span class="logo-title">ProjectHub</span>
-          <span class="logo-subtitle">إدارة المشاريع</span>
+          <span class="logo-subtitle">نظام إدارة المشاريع</span>
         </div>
       }
     </div>
+
+    @if (!isCollapsed()) {
+      <div class="menu-label">القائمة الرئيسية</div>
+    }
 
     <!-- Navigation -->
     <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isCollapsed()" class="sidebar-menu">
@@ -34,8 +42,9 @@
     </ul>
   </nz-sider>
 
-  <!-- ===== MAIN AREA ===== -->
-  <nz-layout class="inner-layout">
+  <!-- ========== MAIN AREA ========== -->
+  <nz-layout [class.collapsed]="isCollapsed()" class="inner-layout">
+
     <!-- Header -->
     <nz-header class="app-header">
       <div class="header-left">
@@ -43,9 +52,13 @@
           <span nz-icon [nzType]="isCollapsed() ? 'menu-unfold' : 'menu-fold'"></span>
         </button>
       </div>
+
       <div class="header-right">
-        <nz-avatar nzText="م" nzSize="default" class="user-avatar"></nz-avatar>
-        <span class="user-name">مدير النظام</span>
+        <div class="user-info">
+          <span class="user-name">مدير النظام</span>
+          <span class="user-role">Administrator</span>
+        </div>
+        <nz-avatar nzText="م" class="user-avatar"></nz-avatar>
       </div>
     </nz-header>
 
@@ -55,5 +68,6 @@
         <router-outlet />
       </div>
     </nz-content>
+
   </nz-layout>
 </nz-layout>
