@@ -1,7 +1,7 @@
 # Project Management System (نظام إدارة المشاريع)
 
 نظام متكامل لإدارة المشاريع والمهام تم تصميمه وبناؤه بأحدث التقنيات مع التركيز على المعمارية النظيفة (Clean Architecture) وتجربة المستخدم (UX/UI) العصرية.
-[ProjectHub Preview](./assets/images/Lists%20Projects.png)
+[ProjectHub Preview](./assets/images/Projects.png)
 [TaskHub Preview](./assets/images/Lists%20Tasks.png)
 
 
