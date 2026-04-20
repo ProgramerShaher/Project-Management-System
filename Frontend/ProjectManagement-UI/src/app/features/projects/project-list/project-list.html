@@ -148,17 +148,22 @@
           <nz-form-item>
             <nz-form-label nzRequired>اسم المشروع</nz-form-label>
             <nz-form-control nzErrorTip="الاسم مطلوب.">
-              <input nz-input formControlName="name" placeholder="أدخل اسم المشروع..." />
+              <nz-input-group [nzPrefix]="nameIcon" class="modern-input">
+                <input nz-input formControlName="name" placeholder="أدخل اسم المشروع الطموح..." />
+              </nz-input-group>
+              <ng-template #nameIcon><span nz-icon nzType="rocket" class="input-icon"></span></ng-template>
             </nz-form-control>
           </nz-form-item>
 
           <nz-form-item>
             <nz-form-label>الوصف</nz-form-label>
             <nz-form-control>
-              <textarea nz-input formControlName="description"
-                [nzAutosize]="{ minRows: 3, maxRows: 6 }"
-                placeholder="وصف مختصر للمشروع وأهدافه...">
-              </textarea>
+              <div class="modern-textarea">
+                <textarea nz-input formControlName="description"
+                  [nzAutosize]="{ minRows: 3, maxRows: 6 }"
+                  placeholder="وصف مختصر للمشروع وأهدافه الاستراتيجية...">
+                </textarea>
+              </div>
             </nz-form-control>
           </nz-form-item>
 
@@ -166,15 +171,19 @@
             <nz-form-item>
               <nz-form-label nzRequired>تاريخ البداية</nz-form-label>
               <nz-form-control nzErrorTip="مطلوب.">
-                <nz-date-picker formControlName="startDate" nzPlaceHolder="اختر" style="width:100%"></nz-date-picker>
+                <div class="date-picker-modern">
+                  <nz-date-picker formControlName="startDate" nzPlaceHolder="اختر" style="width:100%"></nz-date-picker>
+                </div>
               </nz-form-control>
             </nz-form-item>
             <nz-form-item>
               <nz-form-label>تاريخ النهاية</nz-form-label>
               <nz-form-control>
-                <nz-date-picker formControlName="endDate" nzPlaceHolder="اختياري"
-                  [nzDisabledDate]="disabledEndDate" style="width:100%">
-                </nz-date-picker>
+                <div class="date-picker-modern">
+                  <nz-date-picker formControlName="endDate" nzPlaceHolder="اختياري"
+                    [nzDisabledDate]="disabledEndDate" style="width:100%">
+                  </nz-date-picker>
+                </div>
               </nz-form-control>
             </nz-form-item>
           </div>

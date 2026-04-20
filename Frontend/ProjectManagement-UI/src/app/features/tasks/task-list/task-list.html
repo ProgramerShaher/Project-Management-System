@@ -153,17 +153,22 @@
           <nz-form-item>
             <nz-form-label nzRequired>عنوان المهمة</nz-form-label>
             <nz-form-control nzErrorTip="العنوان مطلوب.">
-              <input nz-input formControlName="title" placeholder="أدخل عنوان المهمة..." />
+              <nz-input-group [nzPrefix]="titleIcon" class="modern-input">
+                <input nz-input formControlName="title" placeholder="أدخل عنوان المهمة..." />
+              </nz-input-group>
+              <ng-template #titleIcon><span nz-icon nzType="carry-out" class="input-icon"></span></ng-template>
             </nz-form-control>
           </nz-form-item>
 
           <nz-form-item>
             <nz-form-label>الوصف</nz-form-label>
             <nz-form-control>
-              <textarea nz-input formControlName="description"
-                [nzAutosize]="{ minRows: 2, maxRows: 5 }"
-                placeholder="تفاصيل إضافية...">
-              </textarea>
+              <div class="modern-textarea">
+                <textarea nz-input formControlName="description"
+                  [nzAutosize]="{ minRows: 2, maxRows: 5 }"
+                  placeholder="تفاصيل إضافية للمهمة...">
+                </textarea>
+              </div>
             </nz-form-control>
           </nz-form-item>
 
@@ -172,7 +177,7 @@
               <nz-form-label nzRequired>المشروع</nz-form-label>
               <nz-form-control nzErrorTip="اختر المشروع.">
                 <nz-select formControlName="projectId" nzPlaceHolder="اختر المشروع"
-                  [nzDisabled]="!!editingTask()" style="width:100%">
+                  [nzDisabled]="!!editingTask()" class="modern-select">
                   @for (project of projects(); track project.id) {
                     <nz-option [nzValue]="project.id" [nzLabel]="project.name"></nz-option>
                   }
@@ -183,7 +188,7 @@
             <nz-form-item>
               <nz-form-label nzRequired>الحالة</nz-form-label>
               <nz-form-control>
-                <nz-select formControlName="status" style="width:100%">
+                <nz-select formControlName="status" class="modern-select">
                   @for (s of statuses; track s.value) {
                     <nz-option [nzValue]="s.value" [nzLabel]="s.label"></nz-option>
                   }
@@ -194,7 +199,7 @@
 
           @if (selectedProject()) {
             <div class="project-banner">
-              <span nz-icon nzType="info-circle"></span>
+              <span nz-icon nzType="info-circle" nzTheme="fill"></span>
               نطاق المشروع: {{ selectedProject()!.startDate | date:'yyyy/MM/dd' }}
               @if (selectedProject()!.endDate) {
                 — {{ selectedProject()!.endDate | date:'yyyy/MM/dd' }}
@@ -208,18 +213,22 @@
             <nz-form-item>
               <nz-form-label nzRequired>تاريخ البداية</nz-form-label>
               <nz-form-control nzErrorTip="مطلوب.">
-                <nz-date-picker formControlName="startDate" nzPlaceHolder="اختر"
-                  [nzDisabledDate]="disabledStartDate" style="width:100%">
-                </nz-date-picker>
+                <div class="date-picker-modern">
+                  <nz-date-picker formControlName="startDate" nzPlaceHolder="اختر"
+                    [nzDisabledDate]="disabledStartDate">
+                  </nz-date-picker>
+                </div>
               </nz-form-control>
             </nz-form-item>
 
             <nz-form-item>
               <nz-form-label nzRequired>تاريخ الاستحقاق</nz-form-label>
               <nz-form-control nzErrorTip="مطلوب.">
-                <nz-date-picker formControlName="dueDate" nzPlaceHolder="اختر"
-                  [nzDisabledDate]="disabledDueDate" style="width:100%">
-                </nz-date-picker>
+                <div class="date-picker-modern">
+                  <nz-date-picker formControlName="dueDate" nzPlaceHolder="اختر"
+                    [nzDisabledDate]="disabledDueDate">
+                  </nz-date-picker>
+                </div>
               </nz-form-control>
             </nz-form-item>
           </div>
