@@ -1,8 +1,8 @@
 # Project Management System (نظام إدارة المشاريع)
 
 نظام متكامل لإدارة المشاريع والمهام تم تصميمه وبناؤه بأحدث التقنيات مع التركيز على المعمارية النظيفة (Clean Architecture) وتجربة المستخدم (UX/UI) العصرية.
-![ProjectHub Preview](./assets/images/Projects.png)
-![TaskHub Preview](./assets/images/Lists%20Tasks.png)
+[ProjectHub Preview](./assets/images/Projects.png)
+[TaskHub Preview](./assets/images/Lists%20Tasks.png)
 
 
 
@@ -76,31 +76,36 @@
 
 ---
 
-## 📂 هيكلية المشروع (Project Structure)
+## 📁 هيكلية المشروع (Project Structure)
 
-تبنى هذه المنظومة على مبدأ **Separation of Concerns**، مع تنظيم دقيق لكل من الجانب الأمامي والخلفي لضمان سهولة الصيانة.
-
-### 💻 بنية الواجهة الأمامية (Frontend Structure)
-*تعتمد على إطار عمل **Angular** بتنظيم موديولار (Feature-based).*
-
-| المسار | الوصف والمسؤولية |
-| :--- | :--- |
-| `core/` | النماذج الأساسية، خدمات الـ API، والـ Interceptors. |
-| `layout/` | العناصر الهيكلية الثابتة مثل الـ Sidebar والـ Header. |
-| `features/` | الوظائف الحيوية (المشاريع والمهام) مفصولة في موديولات مستقلة. |
-| `app.routes.ts` | إدارة التنقل (Routing) بين صفحات النظام. |
-| `styles.scss` | نظام التصميم المتكامل (Design Tokens) لتوحيد الواجهات. |
+تبنى هذه المنظومة على مبدأ فصل المهام (Separation of Concerns)، إليك الهيكلية الكاملة للنظام:
 
 ```text
+========================================================================
+💻 أولاً: الواجهة الأمامية (Frontend Structure)
+========================================================================
 src/
-└── app/
-    ├── core/
-    ├── layout/
-    ├── features/
-    │   ├── projects/      # إدارة المشاريع (CRUD)
-    │   └── tasks/         # إدارة المهام والفلترة
-    └── app.routes.ts
+├── app/
+│   ├── core/          # النماذج، خدمات الاتصال (API Services)، Interceptors
+│   ├── layout/        # الهيكل الأساسي للتطبيق (Sidebar, Header)
+│   ├── features/      # مكونات النظام الرئيسية
+│   │   ├── projects/  # شاشة عرض المشاريع ونموذج الإضافة والتعديل
+│   │   └── tasks/     # شاشة عرض المهام والفلترة
+│   └── app.routes.ts  # موجه التطبيق (Routing)
+└── styles.scss        # الإستايلات الأساسية لنظام التصميم المتكامل (Tokens)
 
+
+========================================================================
+⚙️ ثانياً: النظام الخلفي (Backend Structure)
+========================================================================
+ProjectManagement.Api/
+├── Controllers/       # واجهات التحكم (Endpoints) للـ API
+├── Models/
+│   ├── Entities/      # كيانات قاعدة البيانات المباشرة
+│   └── DTOs/          # كائنات تبادل البيانات
+├── Repositories/      # طبقة التفاعل مع الـ Database (Interfaces & Implementation)
+├── Services/          # طبقة الأعمال واللوجيك (التحقق من التواريخ وإدارة الـ DTOs)
+└── Wrappers/          # تغليفات الاستجابات مثل PagedList و ApiResponse
 ---
 
 مبني بإتقان وحب وشغف للبرمجة واهتمام بإنتاج كود نظيف واحترافي. ❤️
